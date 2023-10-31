@@ -12,7 +12,7 @@ abstract contract Initializable {
 
     event Initialized(uint8 version);
 
-    modifier intializer() {
+    modifier initializer() {
         bool isTopLevelCall = !_initializing;
         require(
             (isTopLevelCall && _initialized < 1) || (!Address.isContract(address(this)) && _initialized == 1),
