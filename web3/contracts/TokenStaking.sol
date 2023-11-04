@@ -324,7 +324,7 @@ contract TokenStaking is Ownable, ReentrancyGuard, Initializable {
 
         require(
             IERC20(_tokenAddress).transferFrom(msg.sender, address(this), _amount),
-            "Token Staking: failed to transfer tokens"
+            "TokenStaking: failed to transfer tokens"
         );
     }
 

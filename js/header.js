@@ -2,9 +2,9 @@ const _NETWORK_ID = 80001;
 let SELECT_CONTRACT = {};
 
 SELECT_CONTRACT[_NETWORK_ID] = {
-    network_name: "Polygon Mumbai",
-    explorer_url: "https://mumbai.polygonscan.com/",
-    STACKING: {
+  network_name: "Polygon Mumbai",
+  explorer_url: "https://mumbai.polygonscan.com/",
+  STACKING: {
         sevenDays: {
             address: "0x338FF116E6E1234e14C74F664f837d132D9785Bb"
         },
@@ -583,8 +583,8 @@ SELECT_CONTRACT[_NETWORK_ID] = {
               "type": "function"
             }
         ],
-    },
-    TOKEN: {
+  },
+  TOKEN: {
         symbol: "ZXT",
         address: "0x4513Ec4A0711CeB84e3EA8986B6F7D4d503bb128",
         abi: [
@@ -952,5 +952,27 @@ SELECT_CONTRACT[_NETWORK_ID] = {
               "type": "function"
             }
         ],
-    }
+  }
 }
+
+// countdown global 
+
+let countDownGlobal;
+
+// wallet connection
+
+let web3;
+
+let oContractToken;
+
+let contractCall = "sevenDays";
+
+let currentAddress;
+
+let web3Main = new Web3("https://rpc-mumbai.maticvigil.com")
+
+// Create an instance of Notyf
+var notyf = new Notyf({
+  duration: 3000,
+  position: { x : "right", y: "bottom"} 
+})
