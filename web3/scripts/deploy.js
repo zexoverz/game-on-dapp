@@ -1,11 +1,22 @@
 const hre = require("hardhat");
 
 async function main() {
-  const tokenStaking = await hre.ethers.deployContract("TokenStaking");
+
+  console.log("Starting deploy")
+  
+  //STAKING CONTRACT
+  const tokenStaking = await hre.ethers.deployContract("TokenStaking");    
+    
+  //TOKEN CONTRACT
+  const zexoToken = await hre.ethers.deployContract("ZexoToken");
 
   await tokenStaking.waitForDeployment();
+  await zexoToken.waitForDeployment();
+    
+  console.log(`STACKING: ${await tokenStaking.getAddress()}`);
+  console.log(`TOKEN: ${await zexoToken.getAddress()}`);
 
-  console.log(` STACKING: ${tokenStaking.target}`);
+  
 }
 
 main().catch((error) => {
