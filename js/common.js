@@ -146,4 +146,4 @@ function getContractObj(sClass) {
         SELECT_CONTRACT[_NETWORK_ID].STACKING.abi,
         SELECT_CONTRACT[_NETWORK_ID].STACKING[sClass].address
     )
-}
+} 
