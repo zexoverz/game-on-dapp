@@ -1,5 +1,5 @@
 //FUNCTION CALL
-loadInitialdata("sevenDays");
+loadInitialData("sevenDays");
 connectMe("metamask_wallet");
 function connectWallet() {}
 
@@ -22,7 +22,7 @@ async function loadInitialData(sClass) {
 
         //ID ELEMENT DATA
         let totalUsers = await cObj.methods.getTotalUsers().call();
-        let cApy = await cObj.methods.getAPY.call();
+        let cApy = await cObj.methods.getAPY().call();
         // GET USER
         let userDetail = await cObj.methods.getUser(currentAddress).call();
 
@@ -46,16 +46,18 @@ async function loadInitialData(sClass) {
         document.getElementById(
             "num-of-stackers-value"
         ).innerHTML = `${totalUsers}`;
+
         document.getElementById("apy-value-feature").innerHTML = `${cApy} %`;
 
         //CLASS ELEMENT DATA
         let totalLockedTokens = await cObj.methods.getTotalStakedTokens().call();
-        let earlyUnstakeFee = cObj.methods.getEarlyUnstakeFeePercentage().call();
+        let earlyUnstakeFee = await cObj.methods.getEarlyUnstakeFeePercentage().call();
         
         //ELEMENTS --CLASS
         document.getElementById("total-locked-tokens-value").innerHTML = `
-        ${ totalLockedTokens / 10 ** 10} ${SELECT_CONTRACT[_NETWORK_ID].TOKEN.symbol}`
-
+        ${ totalLockedTokens / 10 ** 18} ${SELECT_CONTRACT[_NETWORK_ID].TOKEN.symbol}`
+        
+        
         document
             .querySelectorAll(".early-unstake-fee-value")
             .forEach(function (element) {
@@ -65,15 +67,29 @@ async function loadInitialData(sClass) {
 
         let minStakeAmount = await cObj.methods.getMinimumStakingAmount().call();
         minStakeAmount = Number(minStakeAmount);
+        let maxStakeAmount = await cObj.methods.getMaxStakingTokenLimit().call();
+        maxStakeAmount = Number(maxStakeAmount);
+
         let minA;
+        let maxA;
 
         if(minStakeAmount) {
-            minA = `${(minStakeAmount / 10 ** 10).toLocaleString()} ${
+            minA = `${(minStakeAmount / 10 ** 18).toLocaleString()} ${
                 SELECT_CONTRACT[_NETWORK_ID].TOKEN.symbol
             }`
         } else {
             minA = "N/A"
         }
+
+        if(maxStakeAmount) {
+            maxA = `${(maxStakeAmount / 10 ** 18).toLocaleString()} ${
+                SELECT_CONTRACT[_NETWORK_ID].TOKEN.symbol
+            }`
+        } else {
+            maxA = "N/A"
+        }
+
+        console.log(maxA, "maximum")
 
         document
             .querySelectorAll(".Minimum-Staking-Amount")
@@ -83,9 +99,7 @@ async function loadInitialData(sClass) {
         document
             .querySelectorAll(".Maximum-Staking-Amount")
             .forEach(function (element) {
-                element.innerHTML = `${(10000000).toLocaleString()} ${
-                    SELECT_CONTRACT[_NETWORK_ID].TOKEN.symbol
-                }` 
+                element.innerHTML = `${maxA}` 
             })
         
         let isStakingPaused = await cObj.methods.getStakingStatus().call();
@@ -108,7 +122,7 @@ async function loadInitialData(sClass) {
         })
 
         let rewardBal = await cObj.methods
-            .getUserEstimatedRewards().call()
+            .getUserEstimatedRewards()
             .call({ from: currentAddress});
             
         
@@ -403,6 +417,8 @@ async function unstackTokens() {
 
         nTokens = Number(nTokens)
 
+        console.log(nTokens, "TOKENS")
+
         let tokenToTransfer = addDecimal(nTokens, 18)
         let sClass = getSelectedTab(contractCall)
         let oContractStacking = getContractObj(sClass)
@@ -443,7 +459,7 @@ async function unstackTokenMain(_amount_wei, oContractStacking, sClass) {
     }
 
     oContractStacking.methods
-        .unstacke(_amount_wei)
+        .unstake(_amount_wei)
         .send({
             from: currentAddress,
             gas: gasEstimation
@@ -506,7 +522,7 @@ async function claimTokens() {
         
         rewardBal = Number(rewardBal)
 
-        console.log("rewardBal", rewardBal)
+        console.log("rewardBal", rewardBal  / 10 ** 18)
 
         if(!rewardBal){
             notyf.dismiss(notification)
@@ -524,7 +540,6 @@ async function claimTokens() {
 
 async function claimTokenMain(oContractStacking, sClass) {
     let gasEstimation;
-
     try {
         gasEstimation = await oContractStacking.methods
             .claimReward()
@@ -533,7 +548,8 @@ async function claimTokenMain(oContractStacking, sClass) {
             })
         console.log("gasEstimation", gasEstimation)
     }catch(error){
-        console.log(error)
+        console.log("ERROR GAS ESTIMATE")
+        console.log(error , "GAS")
         notyf.error(formatEthErrorMsg(error))
         return
     }

@@ -6,16 +6,16 @@ SELECT_CONTRACT[_NETWORK_ID] = {
   explorer_url: "https://mumbai.polygonscan.com/",
   STACKING: {
         sevenDays: {
-            address: "0x338FF116E6E1234e14C74F664f837d132D9785Bb"
+          address: "0x7e97d75812Da68Ad04977F6183aB813aA595e3Cc"
         },
-        tenDays: {
-            address: "0x338FF116E6E1234e14C74F664f837d132D9785Bb"
+        tenDays: { 
+          address: "0x338FF116E6E1234e14C74F664f837d132D9785Bb"
         },
         thirtyTwoDays: {
-            address: "0x338FF116E6E1234e14C74F664f837d132D9785Bb"
+          address: "0x338FF116E6E1234e14C74F664f837d132D9785Bb"
         },
         ninetyDays: {
-            address: "0x338FF116E6E1234e14C74F664f837d132D9785Bb"
+          address: "0x338FF116E6E1234e14C74F664f837d132D9785Bb"
         },
         abi: [
             {
