@@ -1,13 +1,13 @@
 //FUNCTION CALL
-loadInitialData("sevenDays");
+loadInitialData("tenDays");
 connectMe("metamask_wallet");
 function connectWallet() {}
 
 function openTab(event, name) {
-    console.log(name);
+    console.log(name, "EVENT CHANGED");
     contractCall = name;
     getSelectedTab(name);
-    loadInitialdata(name);
+    loadInitialData(name);
 }
 
 async function loadInitialData(sClass) {
@@ -36,7 +36,7 @@ async function loadInitialData(sClass) {
         }
         localStorage.setItem("User", JSON.stringify(user))
 
-        let userDetailBal = userDetail.stakeAmount / 10 ** 18;
+        let userDetailBal = userDetail.stakeAmount;
 
         document.getElementById(
             "total-locked-user-token"
@@ -55,7 +55,7 @@ async function loadInitialData(sClass) {
         
         //ELEMENTS --CLASS
         document.getElementById("total-locked-tokens-value").innerHTML = `
-        ${ totalLockedTokens / 10 ** 18} ${SELECT_CONTRACT[_NETWORK_ID].TOKEN.symbol}`
+        ${ totalLockedTokens} ${SELECT_CONTRACT[_NETWORK_ID].TOKEN.symbol}`
         
         
         document
@@ -74,7 +74,7 @@ async function loadInitialData(sClass) {
         let maxA;
 
         if(minStakeAmount) {
-            minA = `${(minStakeAmount / 10 ** 18).toLocaleString()} ${
+            minA = `${(minStakeAmount).toLocaleString()} ${
                 SELECT_CONTRACT[_NETWORK_ID].TOKEN.symbol
             }`
         } else {
@@ -82,7 +82,7 @@ async function loadInitialData(sClass) {
         }
 
         if(maxStakeAmount) {
-            maxA = `${(maxStakeAmount / 10 ** 18).toLocaleString()} ${
+            maxA = `${(maxStakeAmount).toLocaleString()} ${
                 SELECT_CONTRACT[_NETWORK_ID].TOKEN.symbol
             }`
         } else {
@@ -124,10 +124,11 @@ async function loadInitialData(sClass) {
         let rewardBal = await cObj.methods
             .getUserEstimatedRewards()
             .call({ from: currentAddress});
+
             
         
         document.getElementById("user-reward-balance-value").value = `Reward: ${
-            rewardBal / 10 ** 18
+            rewardBal
         } ${SELECT_CONTRACT[_NETWORK_ID].TOKEN.symbol}`
 
         //USER TOKEN BALANCE
@@ -135,7 +136,9 @@ async function loadInitialData(sClass) {
             ? await oContractToken.methods.balanceOf(currentAddress).call()
             : ""
 
-        balMainUser = Number(balMainUser) / 10 ** 18;
+        balMainUser = Number(balMainUser);
+
+        console.log(balMainUser, "CHECK BALANCE")
 
         document.getElementById(
             "user-token-balance"
@@ -251,13 +254,13 @@ async function stackTokens() {
 
         nTokens = Number(nTokens)
 
-        let tokenToTransfer = addDecimal(nTokens, 18)
+        let tokenToTransfer = addDecimal(nTokens, 0)
 
         console.log("tokenToTransfer", tokenToTransfer)
 
         let balMainUser = await oContractToken.methods.balanceOf(currentAddress).call()
 
-        balMainUser = Number(balMainUser) / 10 ** 18
+        balMainUser = Number(balMainUser)
 
         console.log("balMainUser", balMainUser)
 
@@ -284,7 +287,7 @@ async function stackTokens() {
         }
             
     }catch(error){
-        console.log(error)
+        console.log(error, "ERROR STACK")
         notyf.dismiss(notification)
         notyf.error(formatEthErrorMsg(error))
     }
@@ -293,16 +296,20 @@ async function stackTokens() {
 async function approveTokenSpend(_mint_fee_wei, sClass) {
     let gasEstimation;
 
+    let spendCap = addDecimal(Number(1000000), 0)
+    
+    console.log(_mint_fee_wei, "CHECK MINT FEE")
+
     try{
         gasEstimation = await oContractToken.methods
             .approve(
                 SELECT_CONTRACT[_NETWORK_ID].STACKING[sClass].address,
-                _mint_fee_wei
+                spendCap
             ).estimateGas({
                 from: currentAddress
             })
     }catch(error){
-        console.log(error)
+        console.log(error, "ERROR ESTIMATE APPROVE")
         notyf.error(formatEthErrorMsg(error))
         return
     }
@@ -310,7 +317,7 @@ async function approveTokenSpend(_mint_fee_wei, sClass) {
     oContractToken.methods
         .approve(
             SELECT_CONTRACT[_NETWORK_ID].STACKING[sClass].address,
-            _mint_fee_wei
+            spendCap
         )
         .send({
             from: currentAddress,
@@ -335,6 +342,8 @@ async function stackTokenMain(_amount_wei, sClass) {
 
     let oContractStacking = getContractObj(sClass);
 
+    console.log(_amount_wei, "AMOUNT WEI")
+
     try {
         gasEstimation = await oContractStacking.methods
             .stake(_amount_wei)
@@ -343,7 +352,7 @@ async function stackTokenMain(_amount_wei, sClass) {
             });
         
     }catch(error){
-        console.log(error)
+        console.log(error, "ERROR ESTIMATE GAS STACK")
         notyf.error(formatEthErrorMsg(error))
         return
     }
@@ -366,7 +375,8 @@ async function stackTokenMain(_amount_wei, sClass) {
                 effectiveGasPrice: receipt.effectiveGasPrice,
                 gasUsed: receipt.gasUsed,
                 transactionHash: receipt.transactionHash,
-                type: receipt.type
+                type: receipt.type,
+                status: receipt.status
             }
 
             let transacitonHistory = []
@@ -396,7 +406,7 @@ async function stackTokenMain(_amount_wei, sClass) {
             console.log("Transaction Hash: ", hash)
         })
         .catch((error) => {
-            console.log(error)
+            console.log(error, "ERROR FUNCtion stacck")
             notyf.error(formatEthErrorMsg(error))
             return
         })
@@ -419,7 +429,7 @@ async function unstackTokens() {
 
         console.log(nTokens, "TOKENS")
 
-        let tokenToTransfer = addDecimal(nTokens, 18)
+        let tokenToTransfer = addDecimal(nTokens, 0)
         let sClass = getSelectedTab(contractCall)
         let oContractStacking = getContractObj(sClass)
 
@@ -427,7 +437,7 @@ async function unstackTokens() {
             .getUser(currentAddress)
             .call()
 
-        balMainUser = Number(balMainUser.stakeAmount) / 10 ** 18
+        balMainUser = Number(balMainUser.stakeAmount)
 
         if( balMainUser < nTokens) {
             notyf.error(
@@ -522,7 +532,7 @@ async function claimTokens() {
         
         rewardBal = Number(rewardBal)
 
-        console.log("rewardBal", rewardBal  / 10 ** 18)
+        console.log("rewardBal", rewardBal )
 
         if(!rewardBal){
             notyf.dismiss(notification)

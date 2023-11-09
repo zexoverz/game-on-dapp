@@ -5,7 +5,7 @@ Build web3 Dapp "Token Stacking Dapp Project", in which we can provide users to 
 ## Smart Contract
 
 STACKING: 
-7days contract -> 0x7e97d75812Da68Ad04977F6183aB813aA595e3Cc
-10days contract -> 0x338FF116E6E1234e14C74F664f837d132D9785Bb
+10days contract : 0xfcA3FDebe57B543fE454AB320a18448732f44a99
+365days contract : 0xb5BFB747Df6816C76a042b8FdD5f63872013b7a7
 
-TOKEN: 0x4513Ec4A0711CeB84e3EA8986B6F7D4d503bb128
+ZexoToken : 0x1DAdaF3bc9Ca303D71898D950bfea45A0d835d17
