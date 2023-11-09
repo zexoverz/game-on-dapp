@@ -2,6 +2,7 @@
 
 Build web3 Dapp "Token Stacking Dapp Project", in which we can provide users to stack their ERC20 token and earn reward, we can also provide multiple token stacking contract.
 
+![image](https://github.com/zexoverz/game-on-dapp/blob/master/assets/preview/home.png)
 ## Holesky Network
 The Holesky testnet will be replacing the Goerli testnet. It is planned to be the new testing environment for protocol developments, infrastructures, and developments related to consensus staking. Alongside Sepolia, Holesky will become the primary testing environment for developers on Ethereum.
 
@@ -31,4 +32,6 @@ I have my own ERC20 named "ZexoToken" The contract interacts with an ERC-20 toke
 
 ZexoToken : 0x1DAdaF3bc9Ca303D71898D950bfea45A0d835d17
 ```
+
+
 
