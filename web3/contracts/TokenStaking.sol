@@ -353,6 +353,7 @@ contract TokenStaking is Ownable, ReentrancyGuard, Initializable {
         uint256 amountToUnstake = _amount - feeEarlyUnstake;
 
         _users[user].stakeAmount -= _amount;
+        _totalStakedTokens = _totalStakedTokens - _amount;
 
         if(_users[user].stakeAmount == 0) {
             // delete _users[user];
@@ -413,7 +414,7 @@ contract TokenStaking is Ownable, ReentrancyGuard, Initializable {
 
         uint256 totalStakedTime = currentTime - userTimeStamp;
 
-        userReward += ((totalStakedTime * _users[_user].stakeAmount * _apyRate / PERCENTAGE_DENOMINATOR));
+        userReward += ((totalStakedTime * _users[_user].stakeAmount * _apyRate) / 365 days) / PERCENTAGE_DENOMINATOR;
 
         return (userReward, currentTime);
     }

@@ -2,14 +2,12 @@
 pragma solidity ^0.8.9;
 
 contract ZexoToken {
-    string public name = "@zexotoken";
+    string public name = "ZexoToken";
     string public symbol = "ZXT";
     string public standard = "zexotoken v.0.1";
     uint256 public totalSupply;
     address public ownerOfContract;
     uint256 public _userId;
-
-    uint256 constant initialSupply = 1000000 * (10**18);
 
     address[] public holderToken;
 
@@ -34,10 +32,10 @@ contract ZexoToken {
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
 
-    constructor() {
+    constructor(uint _initialSupply) {
         ownerOfContract = msg.sender;
-        balanceOf[msg.sender] = initialSupply;
-        totalSupply = initialSupply;
+        balanceOf[msg.sender] = _initialSupply;
+        totalSupply = _initialSupply;
     }
 
     function inc() internal {
